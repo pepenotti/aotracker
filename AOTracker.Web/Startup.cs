@@ -1,8 +1,10 @@
+using AOTracker.Web.Data;
 using AOTracker.Web.Models;
 using AOTracker.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,7 +23,8 @@ namespace AOTracker.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new ServerDataService("./Data/base-data.json"));
+            services.AddDbContext<AOToolsContext>(options => options.UseSqlite(Configuration["DbConnectionString"]));
+            services.AddSingleton(sp => new ServerDataService(Configuration["BaseServerData"], sp.CreateScope().ServiceProvider.GetRequiredService<AOToolsContext>()));
             services.AddHostedService(sp => new ServerDataBackgroundService(sp.GetService<ServerDataService>()));
 
             services.AddControllersWithViews();
@@ -36,6 +39,7 @@ namespace AOTracker.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            CreateDatabase(app);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -75,6 +79,15 @@ namespace AOTracker.Web
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+        }
+
+        private void CreateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AOToolsContext>();
+                context.Database.EnsureCreated();
+            }
         }
     }
 }

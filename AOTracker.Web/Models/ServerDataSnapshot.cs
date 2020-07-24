@@ -8,7 +8,7 @@ namespace AOTracker.Web.Models
 
         public ServerDataSnapshot(ServerData sd)
         {
-            this.ServerId = sd.ServerId;
+            this.ServerDataId = sd.ServerDataId;
             this.ServerName = sd.ServerName;
             this.WebUrl = sd.WebUrl;
             this.UsersEndpoint = sd.UsersEndpoint;

@@ -2,7 +2,7 @@
 {
     public class ServerData
     {
-        public int ServerId { get; set; }
+        public int ServerDataId { get; set; }
 
         public string ServerName { get; set; }
 
