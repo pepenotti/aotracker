@@ -26,7 +26,6 @@ namespace AOTracker.Web.Services
             this.HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             this.HttpClient.DefaultRequestHeaders.Host = "aoxtreme.com.ar";
             this.context = context;
-            this.context.Database.EnsureCreated();
         }
 
         public List<ServerDataSnapshot> GetServersData() => this.context.ServerDataSnapshots.ToList();
