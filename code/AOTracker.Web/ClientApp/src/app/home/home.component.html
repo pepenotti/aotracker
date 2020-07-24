@@ -1,0 +1,30 @@
+<p *ngIf="!servers"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="servers">
+  <thead>
+    <tr>
+      <th>Server</th>
+      <th>Is Online</th>
+      <th>Total Users</th>
+      <th>Chart</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let server of servers" style="height: 5vh">
+      <td><a href="{{ server.webUrl }}">{{ server.serverName }}</a> </td>
+      <td>{{ server.isOnline }}</td>
+      <td>{{ server.totalUsers }}</td>
+      <td style="height: 5vh">
+        <apx-chart *ngIf="server.chart" [series]="server.chart.series"
+                   [chart]="server.chart.chart"
+                   [xaxis]="server.chart.xaxis"
+                   [stroke]="server.chart.stroke"
+                   [dataLabels]="server.chart.dataLabels"
+                   [yaxis]="server.chart.yaxis"
+                   [labels]="server.chart.labels"
+                   [tooltip]="server.chart.tooltip"
+                   [legend]="server.chart.legend"></apx-chart>
+      </td>
+    </tr>
+  </tbody>
+</table>

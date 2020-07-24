@@ -1,0 +1,8 @@
+[
+  {
+    "serverId": "1",
+    "serverName": "AOXtreme",
+    "webURL": "https://aoxtreme.com.ar",
+    "usersEndpoint": "https://aoxtreme.com.ar/api/server_statuses"
+  }
+]
