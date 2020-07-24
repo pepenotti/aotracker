@@ -24,6 +24,8 @@ namespace AOTracker.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AOToolsContext>(options => options.UseSqlite(Configuration["DbConnectionString"]));
+            CreateDatabase(services);
+
             services.AddSingleton(sp => new ServerDataService(Configuration["BaseServerData"], sp.CreateScope().ServiceProvider.GetRequiredService<AOToolsContext>()));
             services.AddHostedService(sp => new ServerDataBackgroundService(sp.GetService<ServerDataService>()));
 
@@ -80,9 +82,9 @@ namespace AOTracker.Web
             });
         }
 
-        private void CreateDatabase(IApplicationBuilder app)
+        private void CreateDatabase(IServiceCollection services)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var serviceScope = services.BuildServiceProvider().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<AOToolsContext>();
                 context.Database.EnsureCreated();

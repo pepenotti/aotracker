@@ -2,7 +2,6 @@
 using AOTracker.Web.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,8 +22,6 @@ namespace AOTracker.Web.Services
         {
             this.Data = JsonConvert.DeserializeObject<List<ServerData>>(File.ReadAllText(dataFilePath));
             this.HttpClient = new HttpClient();
-            this.HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            this.HttpClient.DefaultRequestHeaders.Host = "aoxtreme.com.ar";
             this.context = context;
         }
 
