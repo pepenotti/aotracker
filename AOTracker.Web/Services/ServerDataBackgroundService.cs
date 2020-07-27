@@ -18,7 +18,7 @@ namespace AOTracker.Web.Services
         public Task StartAsync(CancellationToken stoppingToken)
         {
             timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(20));
+                TimeSpan.FromMinutes(1));
 
             return Task.CompletedTask;
         }

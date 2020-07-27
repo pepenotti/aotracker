@@ -21,8 +21,10 @@ namespace AOTracker.Web.Services
         public ServerDataService(string dataFilePath, AOToolsContext context)
         {
             this.Data = JsonConvert.DeserializeObject<List<ServerData>>(File.ReadAllText(dataFilePath));
+            // [TODO => HttpClientFactory]
             this.HttpClient = new HttpClient();
             this.context = context;
+            context.Database.EnsureCreated();
         }
 
         public List<ServerDataSnapshot> GetServersData() => this.context.ServerDataSnapshots.ToList();
@@ -35,8 +37,6 @@ namespace AOTracker.Web.Services
                 {
                     var stringResult = "";
 
-                    // [TODO => HttpClientFactory]
-                    var client = new HttpClient(); //You should extract this and reuse the same instance multiple times.
                     var request = new HttpRequestMessage(HttpMethod.Get, server.UsersEndpoint);
 
                     using (var content = new StringContent("{'a' : 1}"))
@@ -44,7 +44,7 @@ namespace AOTracker.Web.Services
                         request.Content = content;
                         request.Headers.Host = "aoxtreme.com.ar";
                         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                        var response = await client.SendAsync(request).ConfigureAwait(false);
+                        var response = await this.HttpClient.SendAsync(request).ConfigureAwait(false);
                         stringResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     }
 
@@ -58,11 +58,11 @@ namespace AOTracker.Web.Services
                         UsersEndpoint = server.UsersEndpoint,
                         IsOnline = serverData.Status.ToLower().Contains("online") && serverData.Players.HasValue,
                         TotalUsers = serverData.Players ?? 0,
-                        TimeStamp = DateTime.Now
+                        TimeStamp = DateTime.UtcNow
                     };
 
                     this.context.ServerDataSnapshots.Add(newSnapshot);
-                    await this.context.SaveChangesAsync();
+                    this.context.SaveChanges();
                 }
             }
             catch (Exception ex)
