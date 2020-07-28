@@ -1,0 +1,17 @@
+.server-online {
+    font-weight: bold;
+    color: green;
+}
+
+.server-offline {
+    font-weight: bold;
+    color: red;
+}
+
+.card:hover {
+  background-color: #fdfdfd;
+}
+
+.card {
+    border-radius: 0;
+}

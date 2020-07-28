@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
+  styleUrls: ['./home.component.css'],
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
@@ -20,7 +21,7 @@ export class HomeComponent {
 
   private getCharOptions(serverData: ServerData) {
     var maxDate = new Date(serverData.snapshots[serverData.snapshots.length - 1].timeStamp);
-    var minDate = new Date(maxDate.getTime() - (6 * 60 * 60 * 1000));
+    var minDate = new Date(maxDate.getTime() - (1 * 60 * 60 * 1000));
 
     return {
       series: [
@@ -41,9 +42,6 @@ export class HomeComponent {
       },
       dataLabels: {
         enabled: false
-      },
-      stroke: {
-        curve: "stepline"
       },
       labels: serverData.snapshots.map(sd => sd.timeStamp),
       xaxis: {

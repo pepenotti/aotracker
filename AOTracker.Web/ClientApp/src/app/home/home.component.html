@@ -1,29 +1,37 @@
 <p *ngIf="!servers"><em>Loading...</em></p>
 
 
-<div class="row mt-3  ">
+<div class="row mt-3">
   <div class="col-12 text-center font-weight-bold">
-    Servidores
   </div>
 </div>
 
 <div class="row mt-1 justify-content-center" *ngFor="let server of servers">
-  <div class="card col-md-10 col-sm-12">
-    <div class="card-body row">
-      <div class="col-6 text-center"><a href="{{ server.webUrl }}">{{ server.serverName }}</a></div>
-      <div class="col-3 text-center" *ngIf="server.isOnline">Online</div>
-      <div class="col-3 text-center" *ngIf="!server.isOnline">Offline</div>
-      <div class="col-3">{{server.totalUsers}} Users</div>
-      <div class="col-12">
-        <apx-chart *ngIf="server.chart" [series]="server.chart.series"
-                   [chart]="server.chart.chart"
-                   [xaxis]="server.chart.xaxis"
-                   [stroke]="server.chart.stroke"
-                   [dataLabels]="server.chart.dataLabels"
-                   [yaxis]="server.chart.yaxis"
-                   [labels]="server.chart.labels"
-                   [tooltip]="server.chart.tooltip"
-                   [legend]="server.chart.legend"></apx-chart>
+  <div class="col-md-10 col-sm-12">
+    <div class="card">
+      <div class="card-header text-center text-header">
+        <div class="card-title">
+          Servidores
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="text-center">
+          <span class="pr-2 mr-2 border-right"><a href="{{ server.webUrl }}">{{ server.serverName }}</a></span>
+          <span class="pr-2 mr-2 border-right server-online" *ngIf="server.isOnline">Online</span>
+          <span class="pr-2 mr-2 border-right server-offline" *ngIf="!server.isOnline">Offline</span>
+          <span>Usuarios: {{server.totalUsers}} </span>
+        </div>
+        <div class="">
+          <apx-chart *ngIf="server.chart" [series]="server.chart.series"
+                     [chart]="server.chart.chart"
+                     [xaxis]="server.chart.xaxis"
+                     [stroke]="server.chart.stroke"
+                     [dataLabels]="server.chart.dataLabels"
+                     [yaxis]="server.chart.yaxis"
+                     [labels]="server.chart.labels"
+                     [tooltip]="server.chart.tooltip"
+                     [legend]="server.chart.legend"></apx-chart>
+        </div>
       </div>
     </div>
   </div>
