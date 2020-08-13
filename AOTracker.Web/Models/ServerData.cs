@@ -4,7 +4,7 @@
     {
         public int ServerDataId { get; set; }
 
-        public string ServerName { get; set; }
+        public string Name { get; set; }
 
         public string WebUrl { get; set; }
 

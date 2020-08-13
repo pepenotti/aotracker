@@ -15,3 +15,12 @@
 .card {
     border-radius: 0;
 }
+
+.server-card-body:hover {
+  border-top: 1px solid #b3b3b3;
+  border-bottom: 1px solid #b3b3b3;
+}
+
+.server-card-body  {
+  border: 1px solid white;
+}

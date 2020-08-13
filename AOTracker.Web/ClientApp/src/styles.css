@@ -18,3 +18,8 @@ code {
 body {
     background-color: black;
 }
+
+.card,
+.form-control {
+    border-radius: 0;
+}

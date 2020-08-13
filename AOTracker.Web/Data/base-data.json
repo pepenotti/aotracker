@@ -1,8 +1,8 @@
 [
   {
     "serverId": "1",
-    "serverName": "AOXtreme",
-    "webURL": "https://aoxtreme.com.ar",
-    "usersEndpoint": "https://aoxtreme.com.ar/api/server_statuses"
+    "name": "AO Libre",
+    "webURL": "http://argentumonline.org/",
+    "usersEndpoint": "https://api.argentumonline.org/api/v1/logs/getNumUsersLogs"
   }
 ]

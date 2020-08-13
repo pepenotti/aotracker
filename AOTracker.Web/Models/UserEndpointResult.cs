@@ -6,6 +6,6 @@ namespace AOTracker.Web.Models
     {
         public int? Players { get; set; }
 
-        public String Status { get; set; }
+        public string Status { get; set; }
     }
 }

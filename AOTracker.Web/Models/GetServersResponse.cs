@@ -4,7 +4,7 @@ namespace AOTracker.Web.Models
 {
     public class GetServersResponse
     {
-        public string ServerName { get; set; }
+        public string Name { get; set; }
 
         public string WebUrl { get; set; }
 

@@ -20,8 +20,8 @@ export class HomeComponent {
   }
 
   private getCharOptions(serverData: ServerData) {
-    var maxDate = new Date(serverData.snapshots[serverData.snapshots.length - 1].timeStamp);
-    var minDate = new Date(maxDate.getTime() - (1 * 60 * 60 * 1000));
+    var maxDate = serverData.snapshots.length === 0 ? new Date() : new Date(serverData.snapshots[serverData.snapshots.length - 1].timeStamp);
+    var minDate = new Date(maxDate.getTime() - (6 * 60 * 60 * 1000));
 
     return {
       series: [
@@ -43,7 +43,19 @@ export class HomeComponent {
       dataLabels: {
         enabled: false
       },
-      labels: serverData.snapshots.map(sd => sd.timeStamp),
+      grid: {
+        strokeDashArray: 3
+      },
+      labels: serverData.snapshots.map(sd => {
+        // Fucked up UTC fix
+        var str = sd.timeStamp.toString();
+
+        if (!str.endsWith('Z')) {
+          str = str.concat('Z');
+        }
+
+        return str;
+      }),
       xaxis: {
         type: "datetime",
         min: minDate.getTime(),
@@ -62,6 +74,7 @@ export class HomeComponent {
       },
       yaxis: {
         opposite: true,
+        tickAmount: 3,
         labels: {
           style: {
             colors: [],
@@ -69,6 +82,9 @@ export class HomeComponent {
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontWeight: 400,
             cssClass: 'apexcharts-xaxis-label',
+          },
+          formatter: val => {
+            return val.toFixed(0)
           },
         }
       },
@@ -87,7 +103,7 @@ export class HomeComponent {
 
 interface ServerDataSnapshot {
   serverId?: number;
-  serverName?: string;
+  name?: string;
   webUrl?: string;
   usersEndpoint?: string;
   isOnline?: string;
@@ -96,7 +112,7 @@ interface ServerDataSnapshot {
 }
 
 interface ServerData {
-  serverName: string;
+  name: string;
   webUrl: string;
   totalUsers: number;
   isOnline: boolean;

@@ -1,0 +1,54 @@
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header text-center">
+          Agregar servidor nuevo
+          <div class="float-right">
+            <a class="card-link m-auto" [routerLink]="['/']">❌</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <label for="server-name">Nombre</label>
+              <div class="input-group mb-3">
+                <input type="text" id="server-name" [(ngModel)]="name" class="form-control" />
+              </div>
+            </div>
+            <div class="col-12">
+              <label for="server-webUrl">Web URL</label>
+              <div class="input-group mb-3">
+                <input type="text" id="server-webUrl" [(ngModel)]="webUrl" class="form-control" />
+              </div>
+            </div>
+            <div class="col-12">
+              <label for="server-usersEndpoint">Users endpoint</label>
+              <div class="input-group mb-3">
+                <input type="text" id="server-usersEndpoint" [(ngModel)]="usersEndpoint" class="form-control" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn m-auto" (click)="OnServerSave()">Guardar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mt-5" *ngIf="serverErrorMessage">
+      <div class="alert alert-danger" [innerHTML]="serverErrorMessage" role="alert">
+      </div>
+    </div>
+
+    <div class="col-12 mt-5" *ngIf="serverSuccessMessage">
+      <div class="alert alert-success" [innerHTML]="serverSuccessMessage" role="alert">
+      </div>
+    </div>
+
+    <div class="col-12 mt-5" *ngIf="serverSavingMessage">
+      <div class="alert alert-info" [innerHTML]="serverSavingMessage" role="alert">
+      </div>
+    </div>
+  </div>
+

@@ -1,22 +1,17 @@
-<p *ngIf="!servers"><em>Loading...</em></p>
 
+<div class="row mt-1 justify-content-center">
+  <p *ngIf="!servers"><em>Loading...</em></p>
 
-<div class="row mt-3">
-  <div class="col-12 text-center font-weight-bold">
-  </div>
-</div>
-
-<div class="row mt-1 justify-content-center" *ngFor="let server of servers">
-  <div class="col-md-10 col-sm-12">
+  <div class="col-md-10 col-sm-12" *ngIf="servers">
     <div class="card">
       <div class="card-header text-center text-header">
         <div class="card-title">
-          Servidores
+          Servidores (<a class="" [routerLink]="['/servers/add']">Agregar</a>)
         </div>
       </div>
-      <div class="card-body">
+      <div class="card-body server-card-body" *ngFor="let server of servers">
         <div class="text-center">
-          <span class="pr-2 mr-2 border-right"><a href="{{ server.webUrl }}">{{ server.serverName }}</a></span>
+          <span class="pr-2 mr-2 border-right"><a href="{{ server.webUrl }}">{{ server.name }}</a></span>
           <span class="pr-2 mr-2 border-right server-online" *ngIf="server.isOnline">Online</span>
           <span class="pr-2 mr-2 border-right server-offline" *ngIf="!server.isOnline">Offline</span>
           <span>Usuarios: {{server.totalUsers}} </span>

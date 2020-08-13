@@ -23,9 +23,10 @@ namespace AOTracker.Web.Services
             return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
+        private async void DoWork(object state)
         {
-            serverDataService.UpdateServersData();
+            await serverDataService.InitializeServersData();
+            await serverDataService.TakeSnapshots();
         }
 
         public Task StopAsync(CancellationToken stoppingToken)

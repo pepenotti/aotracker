@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MapMakerComponent } from './map-maker/map-maker.component';
+import { AddServerComponent } from './server/add-server/add-server.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { MapMakerComponent } from './map-maker/map-maker.component';
     NavMenuComponent,
     HomeComponent,
     MapMakerComponent,
+    AddServerComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -25,6 +27,7 @@ import { MapMakerComponent } from './map-maker/map-maker.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'map-maker', component: MapMakerComponent, pathMatch: 'full' },
+      { path: 'servers/add', component: AddServerComponent, pathMatch: 'full' },
     ])
   ],
   providers: [],

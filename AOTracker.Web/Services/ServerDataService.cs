@@ -6,69 +6,101 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AOTracker.Web.Services
 {
     public class ServerDataService
     {
-        private List<ServerData> Data;
-        private HttpClient HttpClient;
         private AOToolsContext context;
+        private string dataFilePath;
+        private bool initialized;
 
         public ServerDataService(string dataFilePath, AOToolsContext context)
         {
-            this.Data = JsonConvert.DeserializeObject<List<ServerData>>(File.ReadAllText(dataFilePath));
-            // [TODO => HttpClientFactory]
-            this.HttpClient = new HttpClient();
             this.context = context;
             context.Database.EnsureCreated();
+            this.dataFilePath = dataFilePath;
+            this.initialized = false;
         }
 
-        public List<ServerDataSnapshot> GetServersData() => this.context.ServerDataSnapshots.ToList();
-
-        public async Task UpdateServersData() 
+        public List<ServerDataSnapshot> GetServersSnapshots()
         {
-            try
+            while (this.context.ChangeTracker.HasChanges()) { 
+
+            }
+
+            return this.context.ServerDataSnapshots.ToList();
+        }
+
+        public async Task TakeSnapshots()
+        {
+            UserEndpointResult serverData;
+
+            foreach(var server in context.ServersData.ToList())
             {
-                foreach (var server in this.Data)
+                var httpClient = new HttpClient();
+                var stringResult = String.Empty;
+
+                var request = new HttpRequestMessage(HttpMethod.Get, server.UsersEndpoint);
+
+                try
                 {
-                    var stringResult = "";
+                    httpClient.Timeout = TimeSpan.FromSeconds(10);
+                    var response = await httpClient.GetAsync(server.UsersEndpoint);
+                    stringResult = await response.Content.ReadAsStringAsync();
 
-                    var request = new HttpRequestMessage(HttpMethod.Get, server.UsersEndpoint);
+                    stringResult = stringResult.Replace("onlines", "players");
 
-                    using (var content = new StringContent("{'a' : 1}"))
+                    serverData = JsonConvert.DeserializeObject<UserEndpointResult>(stringResult);
+                }
+                catch (Exception ex)
+                {
+                    serverData = new UserEndpointResult
                     {
-                        request.Content = content;
-                        request.Headers.Host = "aoxtreme.com.ar";
-                        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                        var response = await this.HttpClient.SendAsync(request).ConfigureAwait(false);
-                        stringResult = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        Players = 0,
+                        Status = "offline"
+                    };
+                }
+
+                var newSnapshot = new ServerDataSnapshot
+                {
+                    Name = server.Name,
+                    WebUrl = server.WebUrl,
+                    IsOnline = (serverData.Players.HasValue && serverData.Players > 0) || (!string.IsNullOrWhiteSpace(serverData.Status) && serverData.Status.ToLower().Contains("online")),
+                    TotalUsers = serverData.Players ?? 0,
+                    TimeStamp = new DateTime(DateTime.UtcNow.Ticks, DateTimeKind.Utc)
+                };
+
+                this.context.ServerDataSnapshots.Add(newSnapshot);
+                this.context.SaveChanges();
+            }
+        }
+
+        public async Task InitializeServersData()
+        {
+            if (initialized)
+                return;
+
+            var serversData = JsonConvert.DeserializeObject<List<ServerData>>(File.ReadAllText(this.dataFilePath));
+
+            foreach(var serverData in serversData)
+            {
+                try
+                {
+                    var server = context.ServersData.SingleOrDefault(sd => sd.Name == serverData.Name);
+
+                    if(server == null)
+                    {
+                        context.ServersData.Add(serverData);
+                        await context.SaveChangesAsync();
                     }
 
-                    var serverData = JsonConvert.DeserializeObject<UserEndpointResult>(stringResult);
-
-                    var newSnapshot = new ServerDataSnapshot
-                    {
-                        ServerDataId = server.ServerDataId,
-                        ServerName = server.ServerName,
-                        WebUrl = server.WebUrl,
-                        UsersEndpoint = server.UsersEndpoint,
-                        IsOnline = serverData.Status.ToLower().Contains("online") && serverData.Players.HasValue,
-                        TotalUsers = serverData.Players ?? 0,
-                        TimeStamp = DateTime.UtcNow
-                    };
-
-                    this.context.ServerDataSnapshots.Add(newSnapshot);
-                    this.context.SaveChanges();
                 }
+                catch (Exception) { }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
+
+            initialized = true;
         }
     }
 }

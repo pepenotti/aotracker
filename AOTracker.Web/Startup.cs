@@ -86,8 +86,14 @@ namespace AOTracker.Web
         {
             using (var serviceScope = services.BuildServiceProvider().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<AOToolsContext>();
-                context.Database.EnsureCreated();
+                try
+                {
+                    var context = serviceScope.ServiceProvider.GetRequiredService<AOToolsContext>();
+                    context.Database.EnsureCreated();
+                }
+                catch (System.Exception)
+                {
+                }
             }
         }
     }

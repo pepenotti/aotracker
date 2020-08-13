@@ -2,17 +2,13 @@
 
 namespace AOTracker.Web.Models
 {
-    public class ServerDataSnapshot : ServerData
-    {
-        public ServerDataSnapshot() { }
+    public class ServerDataSnapshot
+    { 
+        public int ServerDataSnapshotId { get; set; }
 
-        public ServerDataSnapshot(ServerData sd)
-        {
-            this.ServerDataId = sd.ServerDataId;
-            this.ServerName = sd.ServerName;
-            this.WebUrl = sd.WebUrl;
-            this.UsersEndpoint = sd.UsersEndpoint;
-        }
+        public string Name { get; set; }
+
+        public string WebUrl { get; set; }
 
         public bool IsOnline { get; set; }
 
